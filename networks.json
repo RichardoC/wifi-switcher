@@ -1,0 +1,12 @@
+[
+    {
+        "ssid": "abc",
+        "password": "abc",
+        "username": ""
+    },
+    {
+        "ssid": "def",
+        "password": "def",
+        "username": "example"
+    }
+]
