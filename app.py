@@ -4,32 +4,41 @@ from app_components import Menu, Notification, clear_background
 from events.input import Buttons
 
 import json
+import settings
 import wifi
 
+SETTINGS_PATH = "RichardoC_wifi_switcher"
 
 class WifiSwitcherApp(app.App):
-    networks: object
-    
+    buttons: Buttons
+    networks: []
+    notification: Notification
 
     def __init__(self):
         ## Discover existing wifi networks from file
         self.button_states = Buttons(self)
         self.networks = []
-        self.notification = Notification(f'Initialising')
-        print("initialising")
+        
+
+        stored_networks = settings.get(SETTINGS_PATH)
+        if stored_networks is None:
+            self.notification = Notification(f'No networks present in {SETTINGS_PATH}, please add some')
+            self.minimise()
+            return
+
         try:
-            with open("/apps/RichardoC_wifi_switcher/networks.json", "r") as f:
-                self.networks = json.load(f)
-                # Replace empty strings with None
-                # This is to match what the connect call is expecting
-                for item in self.networks:
-                    for key, value in item.items():
-                        if value == "":
-                            item[key] = None
+            self.networks = json.loads(stored_networks)
+            # Replace empty strings with None
+            # This is to match what the connect call is expecting
+            for item in self.networks:
+                for key, value in item.items():
+                    if value == "":
+                        item[key] = None
                 
         except Exception as e:
-            self.networks = []
             self.notification = Notification(f'Failed to read networks.json file with error {e}')
+            import time
+            time.sleep(5)
             self.minimise()
 
         main_menu_items = ["Network List"]
@@ -42,11 +51,15 @@ class WifiSwitcherApp(app.App):
             select_handler=self.select_handler,
             back_handler=self.back_handler,
         )
+        self.notification = None
 
 
     def select_handler(self, item, position):
         ## Connect to that wifi
         ## Then show notification
+        if position == 0:
+            self.notification = Notification(f'Not a network, please select a network')
+            return
         try:
             network = self.networks[position -1]
             wifi.connect(network["ssid"], network["password"], network["username"])
