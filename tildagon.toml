@@ -30,7 +30,7 @@ author = "RichardoC"
 license = "MIT"
 
 # URL to the repository of your app.
-url = "https://www.github.com/RichardoC/wifi-switcher"
+url = "https://www.github.com/RichardoC_wifi_switcher"
 
 # Description of your app.  Maximum 140 characters!
 description = "Switch between multiple Wifi networks"
@@ -39,4 +39,4 @@ description = "Switch between multiple Wifi networks"
 # increased, we interpret this as a new version being released.
 #
 # Version number must be an integer!
-version = "0.0.1"
+version = "1.0.1"
