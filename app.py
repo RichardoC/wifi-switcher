@@ -8,6 +8,7 @@ import settings
 import wifi
 
 SETTINGS_PATH = "RichardoC_wifi_switcher"
+main_menu_items = ["Network List"]
 
 class WifiSwitcherApp(app.App):
     buttons: Buttons
@@ -15,6 +16,7 @@ class WifiSwitcherApp(app.App):
     notification: Notification
 
     def __init__(self):
+        self.menu = None
         ## Discover existing wifi networks from file
         self.button_states = Buttons(self)
         self.networks = []
@@ -23,6 +25,7 @@ class WifiSwitcherApp(app.App):
         stored_networks = settings.get(SETTINGS_PATH)
         if stored_networks is None:
             self.notification = Notification(f'No networks present in {SETTINGS_PATH}, please add some')
+            self.button_states.clear()
             self.minimise()
             return
 
@@ -39,12 +42,15 @@ class WifiSwitcherApp(app.App):
             self.notification = Notification(f'Failed to read networks.json file with error {e}')
             import time
             time.sleep(5)
+            self.button_states.clear()
             self.minimise()
 
-        main_menu_items = ["Network List"]
         for network in self.networks:
             main_menu_items.append(network["ssid"])
+            
         # Create the menu object
+        print("Making menu object with the following contents...")
+        print(main_menu_items)
         self.menu = Menu(
             self,
             main_menu_items,
@@ -74,7 +80,8 @@ class WifiSwitcherApp(app.App):
         self.minimise()
 
     def update(self, delta):
-        self.menu.update(delta)
+        if self.menu:
+            self.menu.update(delta)
         if self.notification:
             self.notification.update(delta)
 
@@ -82,9 +89,11 @@ class WifiSwitcherApp(app.App):
     def draw(self, ctx):
         clear_background(ctx)
         # Display the menu on the device
-        # as a scrollable list of film titles
-        self.menu.draw(ctx)
+        # as a scrollable list of wifi networks
+        if self.menu:
+            self.menu.draw(ctx)
         if self.notification:
             self.notification.draw(ctx)
 
 __app_export__ = WifiSwitcherApp
+
