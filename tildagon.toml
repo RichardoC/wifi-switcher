@@ -30,7 +30,7 @@ author = "RichardoC"
 license = "MIT"
 
 # URL to the repository of your app.
-url = "https://www.github.com/RichardoC/wifi_switcher"
+url = "https://www.github.com/RichardoC/wifi-switcher"
 
 # Description of your app.  Maximum 140 characters!
 description = "Switch between multiple Wifi networks"
