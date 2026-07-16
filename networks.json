@@ -1,4 +1,8 @@
 [
+    {   "ssid": "emf-open",
+        "password": "",
+        "username": ""
+    },
     {
         "ssid": "abc",
         "password": "abc",
